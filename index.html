@@ -1,6 +1,237 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>HTML Canvas 画大佛</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(#f6e7c8, #d8b275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Microsoft YaHei", sans-serif;
+  }
+  h1 {
+    color: #5a3a1b;
+    margin-bottom: 12px;
+  }
+  canvas {
+    background: #fff8e7;
+    border: 6px solid #8b5a2b;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+</style>
+</head>
 <body>
-<h1>这是我使用github pages搭建的个人站点。</h1>
+
+<h1>Be Peace like Water</h1>
+<canvas id="buddha" width="400" height="600"></canvas>
+
+<script>
+const canvas = document.getElementById("buddha");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+
+// 背景光晕
+const bg = ctx.createRadialGradient(W / 2, H / 2, 60, W / 2, H / 2, 360);
+bg.addColorStop(0, "#fff7d6");
+bg.addColorStop(1, "#f3d99a");
+ctx.fillStyle = bg;
+ctx.fillRect(0, 0, W, H);
+
+// 工具函数
+function line(x1, y1, x2, y2, color = "#3b2a1a", width = 2) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+}
+
+function ellipse(cx, cy, rx, ry, color, fill = true) {
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+  if (fill) {
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  ctx.strokeStyle = "#3b2a1a";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function curve(x1, y1, x2, y2, cx, cy, color = "#3b2a1a", width = 2) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.quadraticCurveTo(cx, cy, x2, y2);
+  ctx.stroke();
+}
+
+// 1. 头部光环
+ctx.beginPath();
+ctx.ellipse(W / 2, 110, 140, 40, 0, 0, Math.PI * 2);
+ctx.fillStyle = "#ffe27a";
+ctx.fill();
+ctx.strokeStyle = "#c99a2b";
+ctx.lineWidth = 3;
+ctx.stroke();
+
+// 2. 头部
+ellipse(W / 2, 150, 70, 80, "#f5dcb4");
+
+// 发髻
+ctx.beginPath();
+ctx.arc(W / 2, 78, 26, 0, Math.PI * 2);
+ctx.fillStyle = "#3b2a1a";
+ctx.fill();
+for (let i = 0; i < 6; i++) {
+  ctx.beginPath();
+  ctx.arc(W / 2 - 16 + i * 6, 72, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#5a3a1b";
+  ctx.fill();
+}
+
+// 脸部阴影
+ctx.beginPath();
+ctx.ellipse(W / 2, 160, 48, 50, 0, 0, Math.PI * 2);
+ctx.fillStyle = "#e5c39a";
+ctx.fill();
+
+// 眉毛
+curve(160, 130, 240, 130, 200, 118, "#3b2a1a", 3);
+
+// 眼睛
+ellipse(175, 148, 8, 4, "#3b2a1a");
+ellipse(225, 148, 8, 4, "#3b2a1a");
+
+// 鼻子
+line(200, 152, 200, 178, "#3b2a1a", 2);
+
+// 嘴
+curve(180, 188, 220, 188, 200, 196, "#3b2a1a", 3);
+
+// 耳朵
+ctx.beginPath();
+ctx.ellipse(128, 160, 14, 36, 0, 0, Math.PI * 2);
+ctx.fillStyle = "#f5dcb4";
+ctx.fill();
+ctx.strokeStyle = "#3b2a1a";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+ctx.beginPath();
+ctx.ellipse(272, 160, 14, 36, 0, 0, Math.PI * 2);
+ctx.fillStyle = "#f5dcb4";
+ctx.fill();
+ctx.strokeStyle = "#3b2a1a";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// 3. 脖子
+ctx.fillStyle = "#f5dcb4";
+ctx.fillRect(170, 220, 60, 40);
+ctx.strokeRect(170, 220, 60, 40);
+
+// 4. 身体 / 袈裟
+ctx.beginPath();
+ctx.moveTo(60, 260);
+ctx.quadraticCurveTo(200, 240, 340, 260);
+ctx.quadraticCurveTo(360, 420, 320, 560);
+ctx.lineTo(80, 560);
+ctx.quadraticCurveTo(40, 420, 60, 260);
+ctx.closePath();
+ctx.fillStyle = "#d94f4f";
+ctx.fill();
+ctx.strokeStyle = "#7a1f1f";
+ctx.lineWidth = 3;
+ctx.stroke();
+
+// 袈裟金色边线
+ctx.beginPath();
+ctx.moveTo(90, 280);
+ctx.quadraticCurveTo(200, 262, 310, 280);
+ctx.strokeStyle = "#f7c948";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// 胸前法印区域
+ctx.beginPath();
+ctx.ellipse(W / 2, 360, 60, 40, 0, 0, Math.PI * 2);
+ctx.fillStyle = "#ffe27a";
+ctx.fill();
+ctx.strokeStyle = "#b5841a";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// 双手（简化打坐手势）
+ctx.beginPath();
+ctx.ellipse(170, 355, 22, 14, 0.3, 0, Math.PI * 2);
+ctx.fillStyle = "#f5dcb4";
+ctx.fill();
+ctx.strokeStyle = "#3b2a1a";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+ctx.beginPath();
+ctx.ellipse(230, 355, 22, 14, -0.3, 0, Math.PI * 2);
+ctx.fillStyle = "#f5dcb4";
+ctx.fill();
+ctx.strokeStyle = "#3b2a1a";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+// 5. 袈裟褶皱
+for (let i = 0; i < 5; i++) {
+  ctx.beginPath();
+  ctx.moveTo(100 + i * 50, 420);
+  ctx.quadraticCurveTo(120 + i * 50, 470, 110 + i * 50, 520);
+  ctx.strokeStyle = "#a83333";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+// 6. 底座
+ctx.beginPath();
+ctx.moveTo(40, 560);
+ctx.lineTo(360, 560);
+ctx.lineTo(340, 590);
+ctx.lineTo(60, 590);
+ctx.closePath();
+ctx.fillStyle = "#8b5a2b";
+ctx.fill();
+ctx.strokeStyle = "#3b2a1a";
+ctx.lineWidth = 3;
+ctx.stroke();
+
+// 底座纹理
+for (let i = 0; i < 6; i++) {
+  line(70 + i * 50, 560, 90 + i * 50, 590, "#5a3a1b", 2);
+}
+
+// 7. 装饰祥云
+function cloud(x, y, s = 1) {
+  ctx.beginPath();
+  ctx.arc(x, y, 10 * s, 0, Math.PI * 2);
+  ctx.arc(x + 12 * s, y - 4 * s, 12 * s, 0, Math.PI * 2);
+  ctx.arc(x + 24 * s, y, 10 * s, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.fill();
+}
+cloud(60, 90, 1);
+cloud(300, 70, 1.2);
+cloud(40, 500, 0.9);
+cloud(320, 510, 1.1);
+</script>
+
 </body>
 </html>
